@@ -40,8 +40,10 @@ pool_members.map! do |member|
   {:ipaddress => server_ip, :hostname => member['hostname']}
 end
 
-package "haproxy" do
-  action :install
+if node['haproxy']['source']['enabled']
+  include_recipe "haproxy::install_from_source"
+else
+  include_recipe "haproxy::install_from_package"
 end
 
 template "/etc/default/haproxy" do
