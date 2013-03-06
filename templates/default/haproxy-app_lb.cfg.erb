@@ -43,5 +43,9 @@ listen ssl_application 0.0.0.0:<%= node["haproxy"]["ssl_incoming_port"] %>
 <% if node["haproxy"]["enable_admin"] -%>
 listen admin 0.0.0.0:22002
   mode http
-  stats uri /
+  stats enable
+  stats uri <% node["haproxy"]["stats_url"] -%>
+  stats realm Haproxy\ Statistics
+  stats auth <% node["haproxy"]["stats_insecure_user"] -%>:<% node["haproxy"]["stats_insecure_pw"]
+  monitor-uri <%= node["haproxy"]["monitor_url"]
 <% end -%>

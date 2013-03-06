@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+haproxy_version = `haproxy -v`
+
 pool_members = search("node", "role:#{node['haproxy']['app_server_role']} AND chef_environment:#{node.chef_environment}") || []
 
 # load balancer may be in the pool
@@ -40,8 +42,10 @@ pool_members.map! do |member|
   {:ipaddress => server_ip, :hostname => member['hostname']}
 end
 
-if node['haproxy']['source']['enabled']
-  include_recipe "haproxy::install_from_source"
+if node['haproxy']['source']['enabled'] 
+  if haproxy_version.include?(node['haproxy']['source']['version'].to_s) == false
+    include_recipe "haproxy::install_from_source"
+  end
 else
   include_recipe "haproxy::install_from_package"
 end
