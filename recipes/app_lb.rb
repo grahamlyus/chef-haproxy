@@ -17,7 +17,11 @@
 # limitations under the License.
 #
 
-haproxy_version = `haproxy -v`
+if File.exists?("/usr/local/sbin/haproxy")
+  haproxy_version = `haproxy -v`
+else 
+  haproxy_version = "Not installed in /usr/local/sbin"
+end
 
 pool_members = search("node", "role:#{node['haproxy']['app_server_role']} AND chef_environment:#{node.chef_environment}") || []
 
@@ -43,7 +47,7 @@ pool_members.map! do |member|
 end
 
 if node['haproxy']['source']['enabled'] 
-  if haproxy_version.include?(node['haproxy']['source']['version'].to_s) == false
+  if haproxy_version.include?(node['haproxy']['source']['version']) == false
     include_recipe "haproxy::install_from_source"
   end
 else

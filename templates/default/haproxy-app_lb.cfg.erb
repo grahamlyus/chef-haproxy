@@ -36,7 +36,7 @@ listen ssl_application 0.0.0.0:<%= node["haproxy"]["ssl_incoming_port"] %>
   balance <%= node["haproxy"]["balance_algorithm"] %>
   mode tcp
   <% @pool_members.each do |member| -%>
-  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node["haproxy"]["ssl_member_port"] %> weight 1 maxconn <%= node["haproxy"]["member_max_connections"] %> check
+  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node["haproxy"]["ssl_member_port"] %> weight 1 maxconn <%= node["haproxy"]["member_max_connections"] %> check<% if node['haproxy']['alt_port_check'] -%> port <%= node['haproxy']['alt_port'] -%><% end -%> 
   <% end -%>
 <% end -%>
 
@@ -44,8 +44,8 @@ listen ssl_application 0.0.0.0:<%= node["haproxy"]["ssl_incoming_port"] %>
 listen admin 0.0.0.0:22002
   mode http
   stats enable
-  stats uri <% node["haproxy"]["stats_url"] -%>
+  stats uri <%= node["haproxy"]["stats_url"] -%>
   stats realm Haproxy\ Statistics
-  stats auth <% node["haproxy"]["stats_insecure_user"] -%>:<% node["haproxy"]["stats_insecure_pw"]
-  monitor-uri <%= node["haproxy"]["monitor_url"]
+  stats auth <%= node["haproxy"]["stats_insecure_user"] -%>:<%= node["haproxy"]["stats_insecure_pw"] -%>
+  monitor-uri <%= node["haproxy"]["monitor_url"] -%>
 <% end -%>
