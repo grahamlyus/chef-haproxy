@@ -19,7 +19,6 @@
 
 default['haproxy']['incoming_port'] = "80"
 default['haproxy']['member_port'] = "8080"
-default['haproxy']['enable_admin'] = true
 default['haproxy']['app_server_role'] = "webserver"
 default['haproxy']['balance_algorithm'] = "roundrobin"
 default['haproxy']['member_max_connections'] = "100"
@@ -27,6 +26,11 @@ default['haproxy']['x_forwarded_for'] = false
 default['haproxy']['enable_ssl'] = false
 default['haproxy']['ssl_incoming_port'] = "443"
 default['haproxy']['ssl_member_port'] = "8443"
+default['haproxy']['enable_admin'] = true
+default["haproxy"]["stats_url"] = "/i_am_hard_to_guess"
+default["haproxy"]["stats_insecure_user"] = "insecure_user"
+default["haproxy"]["stats_insecure_pw"] = "insecure_password"
+default["haproxy"]["monitor_url"] = "/hard_to_guess_too"
 
 default['haproxy']['source']['enabled'] = true
 default['haproxy']['source']['version_branch'] = '1.5'
@@ -35,4 +39,5 @@ default['haproxy']['source']['user'] = 'root'
 default['haproxy']['source']['install_prefix_root'] = '/usr/local'
 
 default['haproxy']['monit']['stats_url'] = 'http://127.0.0.1:22002'
+
 
