@@ -31,8 +31,8 @@ default['haproxy']['alt_port_check'] = false
 default['haproxy']['alt_port'] = "80"
 default['haproxy']['enable_admin'] = true
 default['haproxy']['stats_url'] = "/i_am_hard_to_guess"
-default['haproxy']['stats_insecure_user'] = "insecure_user"
-default['haproxy']['stats_insecure_pw'] = "insecure_password"
+default['haproxy']['stats_user'] = "insecure_user"
+default['haproxy']['stats_password'] = "insecure_password"
 default['haproxy']['monitor_url'] = "/hard_to_guess_too"
 
 default['haproxy']['source']['enabled'] = true

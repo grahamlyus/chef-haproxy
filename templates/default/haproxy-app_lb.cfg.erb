@@ -50,6 +50,6 @@ listen admin 0.0.0.0:22002
   stats enable
   stats uri <%= node["haproxy"]["stats_url"] %>
   stats realm Haproxy\ Statistics
-  stats auth <%= node["haproxy"]["stats_insecure_user"] %>:<%= node["haproxy"]["stats_insecure_pw"] %>
+  stats auth <%= node["haproxy"]["stats_user"] %>:<%= node["haproxy"]["stats_password"] %>
   monitor-uri <%= node["haproxy"]["monitor_url"] %>
 <% end -%>
