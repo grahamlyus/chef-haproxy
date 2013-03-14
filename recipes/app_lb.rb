@@ -28,6 +28,9 @@ pool_members = search("node", "role:#{node['haproxy']['app_server_role']} AND ch
 # load balancer may be in the pool
 pool_members << node if node.run_list.roles.include?(node['haproxy']['app_server_role'])
 
+#sort the pool members so they show up in order on the haproxy dashboard
+pool_members.sort! { |a,b| a.name <=> b.name }
+
 # we prefer connecting via local_ipv4 if 
 # pool members are in the same cloud
 # TODO refactor this logic into library...see COOK-494
@@ -43,8 +46,9 @@ pool_members.map! do |member|
       member['ipaddress']
     end
   end
-  {:ipaddress => server_ip, :hostname => member['hostname']}
+  {:ipaddress => server_ip, :hostname => member['hostname'], :name => member.name}
 end
+
 
 if node['haproxy']['source']['enabled'] 
   if haproxy_version.include?(node['haproxy']['source']['version']) == false

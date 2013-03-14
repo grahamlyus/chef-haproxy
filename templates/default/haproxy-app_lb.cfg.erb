@@ -30,7 +30,7 @@ listen application
   balance <%= node["haproxy"]["balance_algorithm"] %>
   mode http
   <% @pool_members.each do |member| -%>
-  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node["haproxy"]["member_port"] %> weight 1 maxconn <%= node["haproxy"]["member_max_connections"] %> check
+  server <%= member[:name] %> <%= member[:ipaddress] %>:<%= node["haproxy"]["member_port"] %> weight 1 maxconn <%= node["haproxy"]["member_max_connections"] %> check
   <% end -%>
 
 <% if node["haproxy"]["enable_ssl"] -%>
@@ -39,7 +39,7 @@ listen ssl_application
   balance <%= node["haproxy"]["balance_algorithm"] %>
   mode http
   <% @pool_members.each do |member| -%>
-  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node["haproxy"]["ssl_member_port"] %> ssl weight 1 maxconn <%= node["haproxy"]["member_max_connections"] %> check
+  server <%= member[:name] %> <%= member[:ipaddress] %>:<%= node["haproxy"]["ssl_member_port"] %> ssl weight 1 maxconn <%= node["haproxy"]["member_max_connections"] %> check
   <% end -%>
   option httpchk GET <%= node["haproxy"]["check_uri"] %> HTTP/1.1\r\nHost:\ myhost\r\nUser-Agent:\ <%= node.name %>
 <% end -%>
