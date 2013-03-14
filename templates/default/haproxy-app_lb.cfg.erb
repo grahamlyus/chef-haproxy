@@ -32,7 +32,6 @@ listen application
   <% @pool_members.each do |member| -%>
   server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node["haproxy"]["member_port"] %> weight 1 maxconn <%= node["haproxy"]["member_max_connections"] %> check
   <% end -%>
-  option httpchk
 
 <% if node["haproxy"]["enable_ssl"] -%>
 listen ssl_application 
