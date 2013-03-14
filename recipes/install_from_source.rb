@@ -17,7 +17,17 @@
 # limitations under the License.
 #
 
+# Install all the dependency libraries 
 include_recipe "build-essential"
+
+package "libpcre3-dev" do
+  action :install
+end
+
+package "libssl-dev" do 
+  action :install
+end
+
 
 remote_file "#{node['haproxy']['source']['install_prefix_root']}/share/haproxy-#{node['haproxy']['source']['version']}.tar.gz" do
   source "http://haproxy.1wt.eu/download/#{node['haproxy']['source']['version_branch']}/src#{'/devel' if node['haproxy']['source']['version'].include?('dev')}/haproxy-#{node['haproxy']['source']['version']}.tar.gz"
@@ -29,7 +39,7 @@ execute "tar xvzf #{node['haproxy']['source']['install_prefix_root']}/share/hapr
   cwd "#{node['haproxy']['source']['install_prefix_root']}/share"
 end
 
-execute "make TARGET=generic && make install" do
+execute "make TARGET=generic USE_STATIC_PCRE=1 USE_OPENSSL=1 && make install" do
   user node['haproxy']['source']['user']
   cwd "#{node['haproxy']['source']['install_prefix_root']}/share/haproxy-#{node['haproxy']['source']['version']}"
 end

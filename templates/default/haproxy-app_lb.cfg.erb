@@ -32,20 +32,22 @@ listen application 0.0.0.0:<%= node["haproxy"]["incoming_port"] %>
   <% end -%>
 
 <% if node["haproxy"]["enable_ssl"] -%>
-listen ssl_application 0.0.0.0:<%= node["haproxy"]["ssl_incoming_port"] %>
+listen ssl_application 
+  bind 0.0.0.0:<%= node["haproxy"]["ssl_incoming_port"] %> ssl crt /etc/ssl/private/haproxy.pem
   balance <%= node["haproxy"]["balance_algorithm"] %>
-  mode tcp
+  mode http
   <% @pool_members.each do |member| -%>
-  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node["haproxy"]["ssl_member_port"] %> weight 1 maxconn <%= node["haproxy"]["member_max_connections"] %> check<% if node['haproxy']['alt_port_check'] -%> port <%= node['haproxy']['alt_port'] -%><% end -%> 
+  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node["haproxy"]["ssl_member_port"] %> ssl weight 1 maxconn <%= node["haproxy"]["member_max_connections"] %> check
   <% end -%>
+  option httpchk GET <%= node["haproxy"]["check_uri"] %> HTTP/1.1\r\nHost:\ myhost\r\nUser-Agent:\ <%= node.name %>
 <% end -%>
 
 <% if node["haproxy"]["enable_admin"] -%>
 listen admin 0.0.0.0:22002
   mode http
   stats enable
-  stats uri <%= node["haproxy"]["stats_url"] -%>
+  stats uri <%= node["haproxy"]["stats_url"] %>
   stats realm Haproxy\ Statistics
-  stats auth <%= node["haproxy"]["stats_insecure_user"] -%>:<%= node["haproxy"]["stats_insecure_pw"] -%>
-  monitor-uri <%= node["haproxy"]["monitor_url"] -%>
+  stats auth <%= node["haproxy"]["stats_insecure_user"] %>:<%= node["haproxy"]["stats_insecure_pw"] %>
+  monitor-uri <%= node["haproxy"]["monitor_url"] %>
 <% end -%>
