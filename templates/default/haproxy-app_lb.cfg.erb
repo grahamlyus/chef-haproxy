@@ -43,12 +43,11 @@ listen ssl_application
   <% end -%>
   option httpchk GET <%= node["haproxy"]["check_uri"] %> HTTP/1.1\r\nHost:\ myhost\r\nUser-Agent:\ <%= node.name %>
 <% end -%>
-
 <% if node["haproxy"]["enable_admin"] -%>
-listen admin 0.0.0.0:22002
-  mode http
   stats enable
+  stats show-desc <%= node.name %>
   stats uri <%= node["haproxy"]["stats_url"] %>
+  stats refresh 10s
   stats realm Haproxy\ Statistics
   stats auth <%= node["haproxy"]["stats_user"] %>:<%= node["haproxy"]["stats_password"] %>
   monitor-uri <%= node["haproxy"]["monitor_url"] %>
